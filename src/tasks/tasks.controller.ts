@@ -10,4 +10,7 @@ export class TasksController {
   getAllTasks(): Task[] {
     return this.tasksService.getAllTasks();
   }
+
+  @Post()
+  createTask();
 }
