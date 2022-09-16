@@ -11,12 +11,12 @@ import { User } from 'src/auth/user.entity';
 export class TasksService {
   constructor(private tasksRepository: TasksRepository) {}
 
-  async find(id: string): Promise<Task> {
-    return await this.tasksRepository.findOneByOrFail({ id });
+  async find(id: string, user: User): Promise<Task> {
+    return await this.tasksRepository.findOneByOrFail({ id, user });
   }
 
-  async destroy(id: string): Promise<void> {
-    const { affected } = await this.tasksRepository.delete(id);
+  async destroy(id: string, user: User): Promise<void> {
+    const { affected } = await this.tasksRepository.delete({ id, user });
 
     if (affected === 0) {
       throw new NotFoundException(`Task with id=${id} not found`);
@@ -27,8 +27,8 @@ export class TasksService {
     return await this.tasksRepository.getTasks(filterDto, user);
   }
 
-  async update(id: string, status: TaskStatus): Promise<Task> {
-    const task = await this.find(id);
+  async update(id: string, status: TaskStatus, user: User): Promise<Task> {
+    const task = await this.find(id, user);
     task.status = status;
     await this.tasksRepository.save(task);
     return task;
