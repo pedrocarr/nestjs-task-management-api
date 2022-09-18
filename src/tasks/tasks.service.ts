@@ -12,7 +12,13 @@ export class TasksService {
   constructor(private tasksRepository: TasksRepository) {}
 
   async find(id: string, user: User): Promise<Task> {
-    return await this.tasksRepository.findOneByOrFail({ id, user });
+    const found = await this.tasksRepository.findOneByOrFail({ id, user });
+
+    if (!found) {
+      throw new NotFoundException(`Task with ID "${id}" not found`);
+    }
+
+    return found;
   }
 
   async destroy(id: string, user: User): Promise<void> {
